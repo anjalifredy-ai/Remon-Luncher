@@ -1,1 +1,8 @@
-
+{
+  "name": "Remon Launcher",
+  "short_name": "RemonLauncher",
+  "start_url": "/Remon-Luncher/",
+  "display": "standalone",
+  "background_color": "#030805",
+  "theme_color": "#00ff88"
+}
