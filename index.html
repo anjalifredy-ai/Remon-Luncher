@@ -1,3 +1,4 @@
+cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,13 +10,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Remon Launcher">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet"/>
-<script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load', function(){
-    navigator.serviceWorker.register('/Remon-Luncher/sw.js');
-  });
-}
-</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--g:#00ff88;--gd:#00cc66;--dark:#030805;--card:#0a140a;--border:#1a3a1a;--text:#c8f0c8;--dim:#4a7a4a;}
@@ -53,6 +47,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .ms-logo div:nth-child(2){background:#7fba00;}
 .ms-logo div:nth-child(3){background:#00a4ef;}
 .ms-logo div:nth-child(4){background:#ffb900;}
+.ms-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;background:#0078d4;border:none;color:#fff;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;}
 .content{flex:1;min-width:0;}
 .ticker{background:rgba(0,255,136,0.04);border-bottom:1px solid var(--border);padding:7px 20px;display:flex;align-items:center;gap:10px;overflow:hidden;}
 .ticker-label{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;background:var(--g);color:#000;padding:3px 8px;white-space:nowrap;flex-shrink:0;}
@@ -105,12 +100,37 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .hc-icon{font-size:32px;margin-bottom:10px;}
 .hc-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:var(--g);letter-spacing:1px;margin-bottom:7px;}
 .hc-desc{font-size:13px;color:var(--dim);line-height:1.5;}
+.popup-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.87);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;}
+.popup-overlay.show{display:flex;}
+.popup{background:var(--card);border:1px solid var(--border);padding:36px;max-width:380px;width:90%;position:relative;animation:popIn 0.35s ease;}
+@keyframes popIn{from{opacity:0;transform:scale(0.88)}to{opacity:1;transform:scale(1)}}
+.popup-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;line-height:1;}
+.popup-icon{font-size:44px;text-align:center;margin-bottom:14px;}
+.popup-title{font-family:'Orbitron',monospace;font-size:17px;font-weight:900;color:#fff;text-align:center;margin-bottom:8px;}
+.popup-sub{color:var(--dim);font-size:13px;text-align:center;margin-bottom:24px;line-height:1.6;}
+.popup-skip{width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--dim);font-size:13px;cursor:pointer;transition:all 0.3s;margin-top:10px;}
+.popup-skip:hover{border-color:var(--g);color:var(--g);}
 @media(max-width:700px){.sidebar{display:none;}.mc-row{display:none;}.hero-banner{padding:24px 16px;}.page{padding:14px;}.mods-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}}
 </style>
 </head>
 <body>
 <div class="bg-grid"></div>
 <div class="bg-glow"></div>
+
+<!-- MICROSOFT LOGIN POPUP -->
+<div class="popup-overlay" id="msPopup">
+  <div class="popup">
+    <button class="popup-close" onclick="document.getElementById('msPopup').style.display='none'">✕</button>
+    <div class="popup-icon">🔐</div>
+    <div class="popup-title">Microsoft Login</div>
+    <p class="popup-sub">Sign in with your Microsoft account to sync worlds, Realms and Marketplace!</p>
+    <a class="ms-btn" href="https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=00000000402B5328&response_type=code&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf&scope=XboxLive.signin" target="_blank">
+      <div class="ms-logo"><div></div><div></div><div></div><div></div></div>
+      Sign in with Microsoft
+    </a>
+    <button class="popup-skip" onclick="document.getElementById('msPopup').style.display='none'">Continue without signing in</button>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav>
@@ -126,7 +146,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 </nav>
 
 <div class="main-layout">
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">Quick Launch</div>
@@ -145,14 +164,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
       <div class="ft-text">Dragon Mounts mod is trending! 1M+ downloads on MCPEDL this week.</div>
     </div>
     <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <button class="ms-btn" onclick="document.getElementById('msPopup').style.display='flex'">
+        <div class="ms-logo"><div></div><div></div><div></div><div></div></div>
+        Sign in with Microsoft
+      </button>
+    </div>
+    <div class="sidebar-section">
       <div class="sidebar-label">Download App</div>
-      <a class="big-launch" href="https://anjalifredy-ai.github.io/Remon-Luncher/app-release.apk" style="background:linear-gradient(135deg,#1a1a2e,#16213e);color:var(--g);border:1px solid var(--g);">⬇ Download APK</a>
+      <a class="big-launch" href="https://anjalifredy-ai.github.io/Remon-Luncher/app-release.apk" style="background:linear-gradient(135deg,#0a1a0a,#0d200d);color:var(--g);border:1px solid var(--g);animation:none;">⬇ Download APK</a>
     </div>
   </div>
 
-  <!-- CONTENT -->
   <div class="content">
-    <!-- Ticker -->
     <div class="ticker">
       <span class="ticker-label">NEWS</span>
       <div class="ticker-wrap">
@@ -160,7 +184,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
       </div>
     </div>
 
-    <!-- HERO -->
     <div class="hero-banner">
       <div class="hero-content">
         <div class="hero-tag"><div class="dot"></div>Official Minecraft PE Launcher</div>
@@ -181,7 +204,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
       </div>
     </div>
 
-    <!-- HOME -->
     <div class="page active" id="page-home">
       <div class="sec-head"><div class="sec-title">QUICK <span>ACCESS</span></div><div class="sec-line"></div></div>
       <div class="home-grid">
@@ -190,11 +212,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
         <div class="home-card" onclick="showPage('maps',document.querySelectorAll('.nav-tab')[3])"><div class="hc-icon">🗺️</div><div class="hc-title">Maps</div><div class="hc-desc">Hunger Games, Skyblock, Parkour & more!</div></div>
         <div class="home-card" onclick="showPage('seeds',document.querySelectorAll('.nav-tab')[4])"><div class="hc-icon">🌱</div><div class="hc-title">Seeds</div><div class="hc-desc">Best seeds — volcanoes, islands, mansions!</div></div>
         <div class="home-card" onclick="window.location.href='intent://launch/#Intent;scheme=minecraft;package=com.mojang.minecraftpe;end'"><div class="hc-icon">⚡</div><div class="hc-title">Launch Game</div><div class="hc-desc">One tap to launch Minecraft PE directly!</div></div>
-        <div class="home-card" onclick="window.location.href='https://anjalifredy-ai.github.io/Remon-Luncher/app-release.apk'"><div class="hc-icon">⬇</div><div class="hc-title">Download App</div><div class="hc-desc">Download Remon Launcher APK free!</div></div>
+        <div class="home-card" onclick="document.getElementById('msPopup').style.display='flex'"><div class="hc-icon">🔐</div><div class="hc-title">Microsoft Login</div><div class="hc-desc">Sign in to sync worlds & Realms!</div></div>
       </div>
     </div>
 
-    <!-- MODS -->
     <div class="page" id="page-mods">
       <div class="sec-head"><div class="sec-title">BROWSE <span>MODS</span></div><div class="sec-line"></div><div class="sec-count">500+ mods</div></div>
       <div class="mods-grid">
@@ -203,90 +224,4 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
         <a class="mod-card" href="https://mcpedl.com/dragon-mount-mod/" target="_blank"><span class="mod-icon">🐉</span><div class="mod-name">Dragon Mounts</div><div class="mod-desc">Ride your own dragon!</div><div class="mod-bottom"><span class="mod-tag">Mobs</span><span class="mod-get">GET</span></div></a>
         <a class="mod-card" href="https://mcpedl.com/morph-mod/" target="_blank"><span class="mod-icon">🦊</span><div class="mod-name">Morph Mod</div><div class="mod-desc">Transform into any mob!</div><div class="mod-bottom"><span class="mod-tag">Gameplay</span><span class="mod-get">GET</span></div></a>
         <a class="mod-card" href="https://mcpedl.com/guns-mod/" target="_blank"><span class="mod-icon">🔫</span><div class="mod-name">Guns Mod</div><div class="mod-desc">Modern weapons!</div><div class="mod-bottom"><span class="mod-tag">Weapons</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/cars-mod/" target="_blank"><span class="mod-icon">🚗</span><div class="mod-name">Cars Mod</div><div class="mod-desc">Drive real cars!</div><div class="mod-bottom"><span class="mod-tag">Vehicles</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/lucky-block-mod/" target="_blank"><span class="mod-icon">🍀</span><div class="mod-name">Lucky Block</div><div class="mod-desc">Random surprises!</div><div class="mod-bottom"><span class="mod-tag">Fun</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/superheroes-mod/" target="_blank"><span class="mod-icon">🦸</span><div class="mod-name">Superheroes</div><div class="mod-desc">Marvel & DC powers!</div><div class="mod-bottom"><span class="mod-tag">Powers</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/jurassic-craft/" target="_blank"><span class="mod-icon">🦕</span><div class="mod-name">Jurassic Craft</div><div class="mod-desc">Dinosaurs in MCPE!</div><div class="mod-bottom"><span class="mod-tag">Mobs</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/one-punch-man-mod/" target="_blank"><span class="mod-icon">👊</span><div class="mod-name">One Punch Man</div><div class="mod-desc">One hit KO everything!</div><div class="mod-bottom"><span class="mod-tag">Fun</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/among-us-mod/" target="_blank"><span class="mod-icon">🚀</span><div class="mod-name">Among Us Mod</div><div class="mod-desc">Play Among Us in MC!</div><div class="mod-bottom"><span class="mod-tag">Fun</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/titan-addon/" target="_blank"><span class="mod-icon">👾</span><div class="mod-name">Titan Addon</div><div class="mod-desc">Giant titan mobs!</div><div class="mod-bottom"><span class="mod-tag">Mobs</span><span class="mod-get">GET</span></div></a>
-      </div>
-    </div>
-
-    <!-- RESOURCE PACKS -->
-    <div class="page" id="page-resource">
-      <div class="sec-head"><div class="sec-title">RESOURCE <span>PACKS</span></div><div class="sec-line"></div><div class="sec-count">200+ packs</div></div>
-      <div class="mods-grid">
-        <a class="mod-card" href="https://mcpedl.com/default-3d-resource-pack/" target="_blank"><span class="mod-icon">✨</span><div class="mod-name">Default 3D Pack</div><div class="mod-desc">3D items & blocks!</div><div class="mod-bottom"><span class="mod-tag">Graphics</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/faithful-32x/" target="_blank"><span class="mod-icon">🎨</span><div class="mod-name">Faithful 32x</div><div class="mod-desc">HD textures!</div><div class="mod-bottom"><span class="mod-tag">HD</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/natural-texture-pack/" target="_blank"><span class="mod-icon">🌿</span><div class="mod-name">Natural Pack</div><div class="mod-desc">Realistic nature!</div><div class="mod-bottom"><span class="mod-tag">Realistic</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/cartoon-texture-pack/" target="_blank"><span class="mod-icon">🎭</span><div class="mod-name">Cartoon Pack</div><div class="mod-desc">Fun cartoon style!</div><div class="mod-bottom"><span class="mod-tag">Cartoon</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/shaders-mcpe/" target="_blank"><span class="mod-icon">🌅</span><div class="mod-name">Ultra Shaders</div><div class="mod-desc">Beautiful lighting!</div><div class="mod-bottom"><span class="mod-tag">Shaders</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/dark-ui-pack/" target="_blank"><span class="mod-icon">🌑</span><div class="mod-name">Dark UI Pack</div><div class="mod-desc">Dark mode UI!</div><div class="mod-bottom"><span class="mod-tag">UI</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/steampunk-pack/" target="_blank"><span class="mod-icon">⚙️</span><div class="mod-name">Steampunk Pack</div><div class="mod-desc">Industrial style!</div><div class="mod-bottom"><span class="mod-tag">Style</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/medieval-pack/" target="_blank"><span class="mod-icon">🏰</span><div class="mod-name">Medieval Pack</div><div class="mod-desc">Epic medieval!</div><div class="mod-bottom"><span class="mod-tag">Medieval</span><span class="mod-get">GET</span></div></a>
-      </div>
-    </div>
-
-    <!-- MAPS -->
-    <div class="page" id="page-maps">
-      <div class="sec-head"><div class="sec-title">ADVENTURE <span>MAPS</span></div><div class="sec-line"></div><div class="sec-count">150+ maps</div></div>
-      <div class="mods-grid">
-        <a class="mod-card" href="https://mcpedl.com/the-hunger-games-map/" target="_blank"><span class="mod-icon">⚔️</span><div class="mod-name">Hunger Games</div><div class="mod-desc">Battle arena!</div><div class="mod-bottom"><span class="mod-tag">PvP</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/skyblock-map/" target="_blank"><span class="mod-icon">☁️</span><div class="mod-name">SkyBlock</div><div class="mod-desc">Sky survival!</div><div class="mod-bottom"><span class="mod-tag">Survival</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/parkour-map/" target="_blank"><span class="mod-icon">🏃</span><div class="mod-name">Parkour Map</div><div class="mod-desc">Epic parkour!</div><div class="mod-bottom"><span class="mod-tag">Parkour</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/city-map/" target="_blank"><span class="mod-icon">🏙️</span><div class="mod-name">City Map</div><div class="mod-desc">Huge city!</div><div class="mod-bottom"><span class="mod-tag">City</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/among-us-map/" target="_blank"><span class="mod-icon">🚀</span><div class="mod-name">Among Us Map</div><div class="mod-desc">Among Us in MC!</div><div class="mod-bottom"><span class="mod-tag">Fun</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/bedwars-map/" target="_blank"><span class="mod-icon">🛏️</span><div class="mod-name">Bed Wars</div><div class="mod-desc">Protect your bed!</div><div class="mod-bottom"><span class="mod-tag">PvP</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/dropper-map/" target="_blank"><span class="mod-icon">⬇️</span><div class="mod-name">Dropper Map</div><div class="mod-desc">Fall without dying!</div><div class="mod-bottom"><span class="mod-tag">Mini-game</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/mansion-map/" target="_blank"><span class="mod-icon">🏚️</span><div class="mod-name">Horror Mansion</div><div class="mod-desc">Scary horror!</div><div class="mod-bottom"><span class="mod-tag">Horror</span><span class="mod-get">GET</span></div></a>
-      </div>
-    </div>
-
-    <!-- SEEDS -->
-    <div class="page" id="page-seeds">
-      <div class="sec-head"><div class="sec-title">BEST <span>SEEDS</span></div><div class="sec-line"></div><div class="sec-count">100+ seeds</div></div>
-      <div class="mods-grid">
-        <a class="mod-card" href="https://mcpedl.com/best-seeds/" target="_blank"><span class="mod-icon">🌋</span><div class="mod-name">Volcano Seed</div><div class="mod-desc">Spawn near volcano!</div><div class="mod-bottom"><span class="mod-tag">Rare</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/island-seed/" target="_blank"><span class="mod-icon">🏝️</span><div class="mod-name">Island Seed</div><div class="mod-desc">Survival island!</div><div class="mod-bottom"><span class="mod-tag">Island</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/mansion-seed/" target="_blank"><span class="mod-icon">🏰</span><div class="mod-name">Mansion Seed</div><div class="mod-desc">Woodland mansion!</div><div class="mod-bottom"><span class="mod-tag">Loot</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/village-seed/" target="_blank"><span class="mod-icon">🏘️</span><div class="mod-name">Village Seed</div><div class="mod-desc">Multiple villages!</div><div class="mod-bottom"><span class="mod-tag">Village</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/best-seeds/" target="_blank"><span class="mod-icon">💎</span><div class="mod-name">Diamond Seed</div><div class="mod-desc">Diamonds near spawn!</div><div class="mod-bottom"><span class="mod-tag">Diamonds</span><span class="mod-get">GET</span></div></a>
-        <a class="mod-card" href="https://mcpedl.com/best-seeds/" target="_blank"><span class="mod-icon">🌴</span><div class="mod-name">Jungle Seed</div><div class="mod-desc">Huge jungle!</div><div class="mod-bottom"><span class="mod-tag">Jungle</span><span class="mod-get">GET</span></div></a>
-      </div>
-    </div>
-
-    <!-- ABOUT -->
-    <div class="page" id="page-about">
-      <div class="sec-head"><div class="sec-title">ABOUT <span>REMON LAUNCHER</span></div><div class="sec-line"></div></div>
-      <div class="home-grid">
-        <div class="home-card"><div class="hc-icon">⚡</div><div class="hc-title">One Click Launch</div><div class="hc-desc">Launch Minecraft PE directly!</div></div>
-        <div class="home-card"><div class="hc-icon">🔧</div><div class="hc-title">Real Mods</div><div class="hc-desc">All from MCPEDL — verified & safe!</div></div>
-        <div class="home-card"><div class="hc-icon">🛡️</div><div class="hc-title">100% Safe</div><div class="hc-desc">No hacks, no cracks!</div></div>
-        <div class="home-card"><div class="hc-icon">💎</div><div class="hc-title">Always Free</div><div class="hc-desc">No hidden charges ever!</div></div>
-      </div>
-      <div style="margin-top:20px;padding:24px;background:var(--card);border:1px solid var(--border);text-align:center;">
-        <div style="font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--g);margin-bottom:10px;">REMON LAUNCHER v1.0</div>
-        <div style="color:var(--dim);font-size:13px;line-height:2;">
-          Not affiliated with Mojang or Microsoft<br>
-          Minecraft is a trademark of Mojang Studios<br>
-          Mods sourced from MCPEDL.com<br>
-          <span style="color:#cc785c;font-weight:700;font-size:14px;">✦ Powered by Claude ✦</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<script>
-function showPage(page, el) {
-  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('.nav-tab').forEach(function(t){ t.classList.remove('active'); });
-  document.getElementById('page-' + page).classList.add('active');
-  if(el) el.classList.add('active');
-}
-</script>
-</body>
-</html>
-
+        <a class="mod-card" href="https://mcpedl.com/cars-mod/" target="_blank"><span class="mod-icon">🚗</span><div class="mod-name">Cars Mod</div><d
