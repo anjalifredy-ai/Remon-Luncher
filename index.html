@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -47,7 +47,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .featured{margin:14px;padding:12px;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.15);}
 .ft-title{font-family:'Orbitron',monospace;font-size:10px;color:var(--g);font-weight:700;letter-spacing:1px;margin-bottom:6px;}
 .ft-text{font-size:12px;color:var(--dim);line-height:1.5;}
-.ms-login-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;background:#0078d4;border:none;color:#fff;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;}
 .ms-logo{display:grid;grid-template-columns:1fr 1fr;gap:2px;width:16px;height:16px;flex-shrink:0;}
 .ms-logo div{border-radius:1px;}
 .ms-logo div:nth-child(1){background:#f25022;}
@@ -72,7 +71,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .hero-desc{font-size:14px;color:var(--dim);line-height:1.6;margin-bottom:22px;max-width:460px;}
 .hero-btns{display:flex;gap:10px;flex-wrap:wrap;}
 .hero-launch{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;background:linear-gradient(135deg,#00ff88,#00cc66);color:#000;font-family:'Orbitron',monospace;font-size:11px;font-weight:900;letter-spacing:1px;text-decoration:none;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
-.hero-outline{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border:1px solid var(--g);color:var(--g);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;background:transparent;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);transition:all 0.3s;}
+.hero-outline{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border:1px solid var(--g);color:var(--g);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;background:transparent;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);transition:all 0.3s;text-decoration:none;}
 .hero-outline:hover{background:rgba(0,255,136,0.08);}
 .mc-row{position:absolute;right:28px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:7px;}
 .mc-b{width:42px;height:42px;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:19px;transition:transform 0.3s;}
@@ -106,38 +105,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .hc-icon{font-size:32px;margin-bottom:10px;}
 .hc-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:var(--g);letter-spacing:1px;margin-bottom:7px;}
 .hc-desc{font-size:13px;color:var(--dim);line-height:1.5;}
-.popup-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.87);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;}
-.popup-overlay.show{display:flex;}
-.popup{background:var(--card);border:1px solid var(--border);padding:36px;max-width:380px;width:90%;position:relative;animation:popIn 0.35s ease;}
-@keyframes popIn{from{opacity:0;transform:scale(0.88)}to{opacity:1;transform:scale(1)}}
-.popup-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;line-height:1;}
-.popup-icon{font-size:44px;text-align:center;margin-bottom:14px;}
-.popup-title{font-family:'Orbitron',monospace;font-size:17px;font-weight:900;color:#fff;text-align:center;margin-bottom:8px;}
-.popup-sub{color:var(--dim);font-size:13px;text-align:center;margin-bottom:24px;line-height:1.6;}
-.popup-ms{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;background:#0078d4;border:none;color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px;text-decoration:none;}
-.popup-skip{width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--dim);font-size:13px;cursor:pointer;transition:all 0.3s;}
-.popup-skip:hover{border-color:var(--g);color:var(--g);}
 @media(max-width:700px){.sidebar{display:none;}.mc-row{display:none;}.hero-banner{padding:24px 16px;}.page{padding:14px;}.mods-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}}
 </style>
 </head>
 <body>
 <div class="bg-grid"></div>
 <div class="bg-glow"></div>
-
-<!-- POPUP -->
-<div class="popup-overlay" id="loginPopup">
-  <div class="popup">
-    <button class="popup-close" onclick="closePopup()">✕</button>
-    <div class="popup-icon">⛏️</div>
-    <div class="popup-title">Sign In</div>
-    <p class="popup-sub">Sign in with Microsoft to sync your worlds, mods and Realms!</p>
-    <a class="popup-ms" href="https://login.live.com/oauth20_authorize.srf?client_id=00000000402B5328&redirect_uri=https://login.live.com/oauth20_desktop.srf&response_type=code&scope=service::user.auth.xboxlive.com::MBI_SSL" target="_blank" onclick="closePopup()">
-      <div class="ms-logo"><div></div><div></div><div></div><div></div></div>
-      Sign in with Microsoft
-    </a>
-    <button class="popup-skip" onclick="closePopup()">Continue without signing in</button>
-  </div>
-</div>
 
 <!-- NAV -->
 <nav>
@@ -172,11 +145,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
       <div class="ft-text">Dragon Mounts mod is trending! 1M+ downloads on MCPEDL this week.</div>
     </div>
     <div class="sidebar-section">
-      <div class="sidebar-label">Account</div>
-      <a class="ms-login-btn" href="https://login.live.com/oauth20_authorize.srf?client_id=00000000402B5328&redirect_uri=https://login.live.com/oauth20_desktop.srf&response_type=code&scope=service::user.auth.xboxlive.com::MBI_SSL" target="_blank">
-        <div class="ms-logo"><div></div><div></div><div></div><div></div></div>
-        Sign in with Microsoft
-      </a>
+      <div class="sidebar-label">Download App</div>
+      <a class="big-launch" href="https://anjalifredy-ai.github.io/Remon-Luncher/app-release.apk" style="background:linear-gradient(135deg,#1a1a2e,#16213e);color:var(--g);border:1px solid var(--g);">⬇ Download APK</a>
     </div>
   </div>
 
@@ -199,6 +169,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
         <div class="hero-btns">
           <a class="hero-launch" href="intent://launch/#Intent;scheme=minecraft;package=com.mojang.minecraftpe;end">▶ LAUNCH MINECRAFT PE</a>
           <span class="hero-outline" onclick="showPage('mods',document.querySelectorAll('.nav-tab')[1])">🔧 Browse Mods</span>
+          <a class="hero-outline" href="https://anjalifredy-ai.github.io/Remon-Luncher/app-release.apk">⬇ Download APK</a>
         </div>
       </div>
       <div class="mc-row">
@@ -218,8 +189,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
         <div class="home-card" onclick="showPage('resource',document.querySelectorAll('.nav-tab')[2])"><div class="hc-icon">🎨</div><div class="hc-title">Resource Packs</div><div class="hc-desc">HD textures, shaders & UI packs!</div></div>
         <div class="home-card" onclick="showPage('maps',document.querySelectorAll('.nav-tab')[3])"><div class="hc-icon">🗺️</div><div class="hc-title">Maps</div><div class="hc-desc">Hunger Games, Skyblock, Parkour & more!</div></div>
         <div class="home-card" onclick="showPage('seeds',document.querySelectorAll('.nav-tab')[4])"><div class="hc-icon">🌱</div><div class="hc-title">Seeds</div><div class="hc-desc">Best seeds — volcanoes, islands, mansions!</div></div>
-        <div class="home-card" style="cursor:pointer;" onclick="document.querySelector('.hero-launch').click()"><div class="hc-icon">⚡</div><div class="hc-title">Launch Game</div><div class="hc-desc">One tap to launch Minecraft PE directly!</div></div>
-        <div class="home-card" onclick="document.getElementById('loginPopup').classList.add('show')"><div class="hc-icon">🔐</div><div class="hc-title">Microsoft Login</div><div class="hc-desc">Sign in to sync worlds & Realms!</div></div>
+        <div class="home-card" onclick="window.location.href='intent://launch/#Intent;scheme=minecraft;package=com.mojang.minecraftpe;end'"><div class="hc-icon">⚡</div><div class="hc-title">Launch Game</div><div class="hc-desc">One tap to launch Minecraft PE directly!</div></div>
+        <div class="home-card" onclick="window.location.href='https://anjalifredy-ai.github.io/Remon-Luncher/app-release.apk'"><div class="hc-icon">⬇</div><div class="hc-title">Download App</div><div class="hc-desc">Download Remon Launcher APK free!</div></div>
       </div>
     </div>
 
@@ -294,7 +265,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
         <div class="home-card"><div class="hc-icon">🛡️</div><div class="hc-title">100% Safe</div><div class="hc-desc">No hacks, no cracks!</div></div>
         <div class="home-card"><div class="hc-icon">💎</div><div class="hc-title">Always Free</div><div class="hc-desc">No hidden charges ever!</div></div>
       </div>
-      <div style="padding:24px;background:var(--card);border:1px solid var(--border);text-align:center;">
+      <div style="margin-top:20px;padding:24px;background:var(--card);border:1px solid var(--border);text-align:center;">
         <div style="font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--g);margin-bottom:10px;">REMON LAUNCHER v1.0</div>
         <div style="color:var(--dim);font-size:13px;line-height:2;">
           Not affiliated with Mojang or Microsoft<br>
@@ -315,22 +286,7 @@ function showPage(page, el) {
   document.getElementById('page-' + page).classList.add('active');
   if(el) el.classList.add('active');
 }
-
-function closePopup() {
-  document.getElementById('loginPopup').classList.remove('show');
-  try { localStorage.setItem('pd', Date.now()); } catch(e) {}
-}
-
-// Popup after 2 days
-try {
-  var pd = localStorage.getItem('pd');
-  var two = 2*24*60*60*1000;
-  if(!pd || (Date.now()-parseInt(pd))>two){
-    setTimeout(function(){ document.getElementById('loginPopup').classList.add('show'); }, 5000);
-  }
-} catch(e) {
-  setTimeout(function(){ document.getElementById('loginPopup').classList.add('show'); }, 5000);
-}
 </script>
 </body>
 </html>
+
