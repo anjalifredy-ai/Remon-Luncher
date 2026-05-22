@@ -1,15 +1,19 @@
+var CACHE = 'remon-v2';
+
 self.addEventListener('install', function(e) {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', function(e) {
   e.waitUntil(
-    caches.open('remon-launcher').then(function(cache) {
-      return cache.addAll(['/Remon-Luncher/']);
+    caches.keys().then(function(keys) {
+      return Promise.all(keys.map(function(k) {
+        return caches.delete(k);
+      }));
     })
   );
 });
 
 self.addEventListener('fetch', function(e) {
-  e.respondWith(
-    caches.match(e.request).then(function(response) {
-      return response || fetch(e.request);
-    })
-  );
+  e.respondWith(fetch(e.request));
 });
